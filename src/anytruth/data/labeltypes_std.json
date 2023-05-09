@@ -1,0 +1,130 @@
+{
+	"sDTI": "/anytruth/labeldb:1.0",
+	"sId": "${filebasename}",
+
+	"__locals__": {
+		"col": {
+			"brown": [0.8, 0.3, 0.05],
+			"white": [0.8, 0.8, 0.8],
+			"dyellow": [0.43, 0.4, 0.01],
+			"yellow": [0.8, 0.75, 0.02],
+			"yel-red": [0.8, 0.45, 0.02],
+			"yel-grn": [0.54, 0.8, 0.04],
+			"lgreen": [0.05, 0.8, 0.05],
+			"green": [0.05, 0.5, 0.05],
+			"dgreen": [0.05, 0.3, 0.05],
+			"lcyan": [0.4, 0.8, 0.8],
+			"red": [0.8, 0.1, 0.1],
+			"redmagenta": [0.8, 0.08, 0.36],
+			"magenta": [0.8, 0.1, 0.8],
+			"lmagenta": [0.25, 0.125, 0.8],
+			"blue": [0.06, 0.07, 0.8]
+		},
+
+		"roadtypes": {
+			"Mark": {
+				"sDTI": "/anytruth/labeldb/type:1",
+				"lColor": "${lMarkCol}",
+				"mTypes": {
+					"Lane": {
+						"sDTI": "/anytruth/labeldb/type:1",
+						"mTypes": {
+							"Dashed": {
+								"sDTI": "/anytruth/labeldb/type:1"
+							},
+							"Solid": {
+								"sDTI": "/anytruth/labeldb/type:1"
+							}
+						}
+					},
+					"Sign": {
+						"sDTI": "/anytruth/labeldb/type:1"
+					}
+				}
+			}
+		}
+	},
+
+	"mTypes": {
+		"Environment": {
+			"sDTI": "/anytruth/labeldb/type:1",
+			"lColor": "${col:dgreen}",
+			"mTypes": {
+				"Grass": {
+					"sDTI": "/anytruth/labeldb/type:1",
+					"lColor": "${col:lgreen}"		
+				}
+			}
+		},
+		"Person": {
+			"sDTI": "/anytruth/labeldb/type:1",
+			"lColor": "${col:yellow}",
+			"mTypes": {
+				"Male": {
+					"sDTI": "/anytruth/labeldb/type:1",
+					"lColor": "${col:yel-red}"
+				},
+				"Female": {
+					"sDTI": "/anytruth/labeldb/type:1",
+					"lColor": "${col:yel-grn}"
+				}
+			}
+		},
+		"Sign": {
+			"sDTI": "/anytruth/labeldb/type:1",
+			"lColor": "${col:blue}",
+			"mTypes": {
+				"Pole": {
+					"sDTI": "/anytruth/labeldb/type:1",
+					"lColor": "${col:lmagenta}"
+				},
+				"Symbol": {
+					"sDTI": "/anytruth/labeldb/type:1",
+					"lColor": "${col:blue}"
+				}
+			}
+		},
+		"Vehicle": {
+			"sDTI": "/anytruth/labeldb/type:1",
+			"lColor": "${col:red}",
+			"mTypes": {
+				"Car": {
+					"sDTI": "/anytruth/labeldb/type:1",
+					"lColor": "${col:red}"		
+				},
+				"Transporter": {
+					"sDTI": "/anytruth/labeldb/type:1",
+					"lColor": "${col:redmagenta}"		
+				},
+				"Motorbike": {
+					"sDTI": "/anytruth/labeldb/type:1",
+					"lColor": "${col:magenta}"		
+				}
+			}
+		},
+		"Road": {
+			"sDTI": "/anytruth/labeldb/type:1",
+			"lColor": "${col:brown}",
+			"mTypes": {
+				"Fence": {
+					"sDTI": "/anytruth/labeldb/type:1",
+					"lColor": "${col:lcyan}"
+				},
+				"Std": {
+					"__locals__": { "lMarkCol": "${col:white}" },
+
+					"sDTI": "/anytruth/labeldb/type:1",
+					"lColor": "${col:brown}",
+					"mTypes": "${roadtypes}"
+				},
+				"Works": {
+					"__locals__": { "lMarkCol": "${col:dyellow}" },
+
+					"sDTI": "/anytruth/labeldb/type:1",
+					"lColor": "${col:brown}",
+					"mTypes": "${roadtypes}"
+				}
+			}
+		}
+	}
+}
