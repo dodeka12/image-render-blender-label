@@ -1,4 +1,4 @@
-# Image-Render Standard Blender Actions
+# Image-Render Blender AddOn for Ground Truth generation
 
 Implements Blender addon `anytruth` for specifying scene labels and functions for `image-render` modules.
 
