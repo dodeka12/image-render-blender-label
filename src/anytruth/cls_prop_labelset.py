@@ -639,6 +639,9 @@ class CLabelSet:
 
             objX = bpy.data.objects.get(xObjData.sId)
             objX.pass_index = iObjIdx
+            # Need to ensure that object is not regarded as shadow catcher.
+            # Otherwise material colors are multiplied by 2 by Blender internally!?
+            objX.is_shadow_catcher = False
 
             if funcPerObject is not None:
                 funcPerObject(objX)
@@ -1497,8 +1500,11 @@ class CLabelSet:
                 xArmaPose = None
             # endif
 
-            lObjects = [bpy.data.objects[x] for x in xLabInst.lValidObjects if bpy.data.objects[x].type == "MESH"]
+            lObjects: list[bpy.types.Object] = [
+                bpy.data.objects[x] for x in xLabInst.lValidObjects if bpy.data.objects[x].type == "MESH"
+            ]
 
+            objIter: bpy.types.Object
             for objIter in lObjects:
 
                 # Store current object data that will be changed
@@ -1506,6 +1512,7 @@ class CLabelSet:
                 xObjData.sLabelId = sLabelType
                 xObjData.iLabelPassIdx = xActInst.iIdx
 
+                objX: bpy.types.Object = None
                 if xArmaPose is not None and len(xArmaPose.clSkelId) > 0:
                     if self.bEnableArmatureSelfOcclusion is True:
                         xObjData.sMaterialType = "ARMATURE_MESH"
@@ -1524,6 +1531,7 @@ class CLabelSet:
 
                 xObjData.sId = xObjData.name = objX.name
                 xObjData.iPassIdx = objX.pass_index
+                xObjData.bIsShadowCatcher = objX.is_shadow_catcher
 
                 # Store object in applied types structure
                 xActObj = xActInst.clObjects.add()
@@ -1691,6 +1699,7 @@ class CLabelSet:
                 # endif has materials
             # endfor meshes
             objX.pass_index = xObjData.iPassIdx
+            objX.is_shadow_catcher = xObjData.bIsShadowCatcher
         # endfor objects
 
         for xObjData in self.clIgnoreObjectData:

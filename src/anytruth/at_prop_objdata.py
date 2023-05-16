@@ -63,6 +63,7 @@ class CPgAtObjectData(bpy.types.PropertyGroup):
     clMeshes: bpy.props.CollectionProperty(type=CPgAtMesh)
     iPassIdx: bpy.props.IntProperty(default=0)
     iLabelPassIdx: bpy.props.IntProperty(default=0)
+    bIsShadowCatcher: bpy.props.BoolProperty(default=False)
 
 
 # endclass
