@@ -1857,7 +1857,7 @@ class CLabelSet:
 
                     # Get rotation matrix of orientation object without scale
                     mWorldT = np.array(objOrient.matrix_world.to_euler().to_matrix()).transpose()
-                    mWorldInvT = np.array(objOrient.matrix_world.inverted().to_euler().to_matrix()).transpose()
+                    mWorldInvT = np.array(objOrient.matrix_world.to_euler().to_matrix().inverted()).transpose()
 
                 else:
                     # Use an SVD to determine the main directions of the vertex set
