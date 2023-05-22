@@ -135,7 +135,6 @@ class CLabelInstance:
 # However, I want to be able to use Catharsys on systems where not all addons are installed.
 class CLabelSet:
     def __init__(self, _xLabelSetProp):
-
         self.xLabelSetProp = _xLabelSetProp
 
         # Default label shader type
@@ -379,7 +378,6 @@ class CLabelSet:
 
     ##########################################################################
     def ApplyAnnotation(self, _bApply, *, _bEvalBoxes2d: bool = False):
-
         if _bApply == self.loc_bApplyAnnotation:
             return
         # endif
@@ -453,7 +451,6 @@ class CLabelSet:
 
     ###################################################################################
     def _PrepareCameraForLabeling(self):
-
         ##########################################################################################
         # Check for settings by AnyCam Camera
         if self.xAnyCamConfig.FromCamera(bpy.context.scene.camera, _bDoRaise=False) is True:
@@ -469,7 +466,6 @@ class CLabelSet:
 
     ###################################################################################
     def _RestoreCameraFromLabeling(self):
-
         if self.xAnyCamConfig.FromCamera(bpy.context.scene.camera, _bDoRaise=False) is True:
             self.xAnyCamConfig.EnableLabeling(False)
         # endif
@@ -478,7 +474,6 @@ class CLabelSet:
 
     ###################################################################################
     def ApplyPos3d(self):
-
         self._PrepareCameraForLabeling()
 
         lObjects = [
@@ -510,7 +505,6 @@ class CLabelSet:
 
     ###################################################################################
     def UpdatePos3dOffset(self):
-
         lObjects = [
             x
             for x in bpy.context.scene.objects
@@ -535,7 +529,6 @@ class CLabelSet:
 
     ###################################################################################
     def ApplyLocalPos3d(self):
-
         bSphericalCS: bool = False
 
         self._PrepareCameraForLabeling()
@@ -568,7 +561,6 @@ class CLabelSet:
 
     ###################################################################################
     def ApplyObjectIdx(self):
-
         self._PrepareCameraForLabeling()
 
         # Create Material
@@ -582,7 +574,6 @@ class CLabelSet:
 
     ###################################################################################
     def ApplyObjectLoc3d(self):
-
         self._PrepareCameraForLabeling()
 
         # Create Material
@@ -636,7 +627,6 @@ class CLabelSet:
         # Set materials and pass index of objects
         iObjIdx: int = 1
         for xObjData in self.clObjectData:
-
             objX = bpy.data.objects.get(xObjData.sId)
             objX.pass_index = iObjIdx
             # Need to ensure that object is not regarded as shadow catcher.
@@ -713,7 +703,6 @@ class CLabelSet:
 
     ###################################################################################
     def _CollectUserMaterials(self):
-
         # Collect all available user defined label materials
         # for the currently available types
         for matX in bpy.data.materials:
@@ -760,7 +749,6 @@ class CLabelSet:
 
     ###################################################################################
     def _PrepareUserMaterials(self):
-
         lTypeIds = [x.sId for x in self.clAppliedTypes]
 
         for sUserMatId in self.dicUserLabelMaterial:
@@ -811,7 +799,6 @@ class CLabelSet:
 
     ###################################################################################
     def _GetBlenderToCustomWorldMatrix(self):
-
         objOrig = bpy.data.objects.get("AT.Label.Orig.World")
         if objOrig is None:
             return mathutils.Matrix.Identity(4)
@@ -823,7 +810,6 @@ class CLabelSet:
 
     ###################################################################################
     def _IgnoreAllLights(self):
-
         lLights = [x for x in bpy.data.objects if x.type == "LIGHT"]
 
         for objL in lLights:
@@ -978,7 +964,6 @@ class CLabelSet:
 
     ############################################################################################################
     def _SetDefaultMeshLabelMaterial(self, _dicMatType, _xObjData):
-
         sLabelType = _xObjData.sLabelId
         xMat = _dicMatType.get(sLabelType)
         if xMat is None:
@@ -1138,7 +1123,6 @@ class CLabelSet:
 
     ############################################################################################################
     def _AddArmatureData(self, *, objArma, xActInst, xActAppType):
-
         xPose = xActInst.clPoses.get(objArma.name)
         if xPose is None:
             xPose = xActInst.clPoses.add()
@@ -1187,7 +1171,6 @@ class CLabelSet:
         # add the skeleton label bones as shader types
         # to the applied type
         if len(xPose.clSkelId) > 0:
-
             # For now, use first skeleton found.
             # TODO: Need some way to select skeleton type for labelling.
             sSkelId = xPose.clSkelId[0].sId
@@ -1298,7 +1281,6 @@ class CLabelSet:
         _sParentInstOrientId,
         _iParentInstIdx,
     ):
-
         ### DEBUG
         # sClName = _clAct.name
         # if sClName == "Grass":
@@ -1453,7 +1435,6 @@ class CLabelSet:
 
         # Loop over instances
         for xLabInst in lLabInst:
-
             bNewInstance = False
             if bFirstObject:
                 bFirstObject = False
@@ -1506,7 +1487,6 @@ class CLabelSet:
 
             objIter: bpy.types.Object
             for objIter in lObjects:
-
                 # Store current object data that will be changed
                 xObjData = self.clObjectData.add()
                 xObjData.sLabelId = sLabelType
@@ -1662,11 +1642,9 @@ class CLabelSet:
 
     ###################################################################################
     def Restore(self):
-
         self.Print("Restore() start")
 
         for xObjData in self.clObjectData:
-
             objX = bpy.data.objects.get(xObjData.sId)
             if objX is None:
                 continue
@@ -1734,7 +1712,6 @@ class CLabelSet:
 
     ###################################################################################
     def EvalPoses(self):
-
         for xAppType in self.clAppliedTypes:
             for xInst in xAppType.clInstances:
                 for xPose in xInst.clPoses:
@@ -1773,7 +1750,6 @@ class CLabelSet:
 
     ###################################################################################
     def EvalBoxes3d(self):
-
         xDepsGraph = bpy.context.evaluated_depsgraph_get()
 
         for xAppType in self.clAppliedTypes:
@@ -1783,7 +1759,6 @@ class CLabelSet:
             ############################################
 
             for xInst in xAppType.clInstances:
-
                 ############################################
                 # ## DEBUG ###
                 # if len(xInst.clObjects) > 0:
@@ -1893,7 +1868,6 @@ class CLabelSet:
 
     ###################################################################################
     def EvalBoxes2d(self):
-
         # xDepsGraph = bpy.context.evaluated_depsgraph_get()
 
         viewCam = anycam.ops.GetAnyCamView(bpy.context, bpy.context.scene.camera.name, _bAddExtrinsics=True)
@@ -1906,7 +1880,6 @@ class CLabelSet:
             ############################################
 
             for xInst in xAppType.clInstances:
-
                 ############################################
                 # ## DEBUG ###
                 # if len(xInst.clObjects) > 0:
@@ -1961,7 +1934,6 @@ class CLabelSet:
 
     ###################################################################################
     def EvalVertexLists3d(self):
-
         # xDepsGraph = bpy.context.evaluated_depsgraph_get()
 
         for xAppType in self.clAppliedTypes:
@@ -2073,7 +2045,6 @@ class CLabelSet:
 
     ##########################################################################
     def _GetVexListLineStrip(self, _objOrigX, _tRGB):
-
         xDG = bpy.context.evaluated_depsgraph_get()
 
         objX = _objOrigX.evaluated_get(xDG)
@@ -2324,7 +2295,6 @@ class CLabelSet:
         if self.sFilePathImport == "":
             xData = res.files(anytruth).joinpath("data").joinpath("labeltypes_std.json")
             with res.as_file(xData) as pathData:
-
                 self.sFilePathImport = pathData.as_posix()
                 if self.bImportFileExists:
                     self.ImportTypes()
@@ -2546,8 +2516,9 @@ class CLabelSet:
             if dicAnyCam is not None:
                 bIsPin = anybase.config.IsConfigType(dicAnyCam, "/anycam/camera/pin:1.2")
                 bIsPano = anybase.config.IsConfigType(dicAnyCam, "/anycam/camera/pano/equidist:1.2")
+                bIsPanoPoly = anybase.config.IsConfigType(dicAnyCam, "/anycam/camera/pano/poly:1.2")
                 bIsLut = anybase.config.IsConfigType(dicAnyCam, "/anycam/camera/lut/std:1.2")
-                if bIsPin is True or bIsPano is True or bIsLut is True:
+                if bIsPin is True or bIsPano is True or bIsPanoPoly or bIsLut is True:
                     dicData["mCamera"].update(dicAnyCam)
                     if bIsLut is True:
                         StoreLutCameraData(_dicCamData=dicData["mCamera"], _xPath=xPath.parent, _bOverwrite=False)
@@ -2572,7 +2543,6 @@ class CLabelSet:
 
     ##########################################################################
     def _ProvideLabelMaterials(self):
-
         iMaxInstCnt = 0
         lTypeIds = []
 
@@ -2587,7 +2557,6 @@ class CLabelSet:
         dicMatArma = {}
 
         for iIdx, sTypeId in enumerate(lTypeIds):
-
             matLabel = CLabel(
                 iLabelTypeCount=iLabelTypeCnt,
                 iMaxInstCount=iMaxInstCnt,
@@ -2609,7 +2578,6 @@ class CLabelSet:
                 # and attach its' red channel to the shader type input.
                 dicMatSkel = {}
                 for sSkelId in clSkel.keys():
-
                     matSkel = CLabelSkeleton(
                         iLabelTypeCount=iLabelTypeCnt,
                         iMaxInstCount=iMaxInstCnt,
@@ -2650,7 +2618,6 @@ class CLabelSet:
 
     ############################################################################################################
     def _AddLabelTypes(self, _lTypes, _lPath, _dicTypes, _dicDefaults):
-
         for sId in _dicTypes:
             dicType = _dicTypes.get(sId)
             if not isinstance(dicType, dict):
@@ -2682,7 +2649,6 @@ class CLabelSet:
 
     ############################################################################################################
     def LoadLabelDb(self, _sFpLabelDb):
-
         if not os.path.exists(_sFpLabelDb):
             raise CAnyExcept("Label types file does not exist: {0}".format(_sFpLabelDb))
         # endif
@@ -2710,7 +2676,6 @@ class CLabelSet:
 
     ##########################################################################
     def CreateAnyTruthCollection(self, _sName):
-
         anyblend.collection.MakeRootLayerCollectionActive(bpy.context)
         clRoot = anyblend.collection.GetCollection("AnyTruth")
         # print(f"Root collection: {clRoot}")
@@ -2737,7 +2702,6 @@ class CLabelSet:
 
     ##########################################################################
     def CreateBoxes3d(self):
-
         self.CreateAnyTruthCollection("Boxes3d")
 
         for xAppType in self.clAppliedTypes:
@@ -2801,7 +2765,6 @@ class CLabelSet:
 
     ##########################################################################
     def CreatePoses(self):
-
         self.CreateAnyTruthCollection("Poses")
 
         for xAppType in self.clAppliedTypes:
@@ -2844,7 +2807,6 @@ class CLabelSet:
 
     ##########################################################################
     def CreateVertexGroups(self):
-
         self.CreateAnyTruthCollection("VertexGroups")
 
         for xAppType in self.clAppliedTypes:
