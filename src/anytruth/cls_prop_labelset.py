@@ -1073,8 +1073,21 @@ class CLabelSet:
         sVexColNameLabel = "AT.Label;{};{}".format(sSkelId, sLabelType)
         sVexColNamePreview = "AT.Label.Preview;{};{}".format(sSkelId, sLabelType)
 
+        # Look for the associated Armature object as one of the parents
+        # in the parent hierarchy of the object.
+        objArma = objX
+        while True:
+            objArma = objArma.parent
+            if objArma is None:
+                raise RuntimeError(f"Object '{objX.name}' has no armature as parent")
+            # endif
+            if objArma.type == "ARMATURE":
+                break
+            # endif
+        # endwhile
+
         armature.CreateBoneWeightVexColLay(
-            objArma=objX.parent,
+            objArma=objArma,
             objMesh=objX,
             lBoneNames=lBoneIds,
             sBoneWeightMode="HEAD",
@@ -1084,9 +1097,9 @@ class CLabelSet:
             sVexColNamePreview=sVexColNamePreview,
         )
 
-        dicArmaBLW = c_dicArmatureBoneLabelWeights.get(objX.parent.name)
+        dicArmaBLW = c_dicArmatureBoneLabelWeights.get(objArma.name)
         if dicArmaBLW is None:
-            dicArmaBLW = c_dicArmatureBoneLabelWeights[objX.parent.name] = {
+            dicArmaBLW = c_dicArmatureBoneLabelWeights[objArma.name] = {
                 "lBoneNames": lBoneIds,
                 "sBoneWeightMode": "HEAD",
                 "lLabelColors": lBoneColors,
