@@ -31,15 +31,14 @@ import bpy
 
 ###################################################################################
 class CPgAtShaderTypes(bpy.types.PropertyGroup):
-
     sId: bpy.props.StringProperty(name="Shader Type Id")
 
 
 # endclass
 
+
 ###################################################################################
 class CPgAtBox2d(bpy.types.PropertyGroup):
-
     bIsValid: bpy.props.BoolProperty(default=False, name="IsValid")
 
     vMinXY: bpy.props.FloatVectorProperty(name="Min XY")
@@ -57,7 +56,6 @@ class CPgAtBox2d(bpy.types.PropertyGroup):
 
 ###################################################################################
 class CPgAtBox3d(bpy.types.PropertyGroup):
-
     bIsValid: bpy.props.BoolProperty(default=False, name="IsValid")
 
     vCenter: bpy.props.FloatVectorProperty(name="Center")
@@ -120,7 +118,6 @@ def _CPgAtSkeleton_GetActBone(self):
 
 
 def _UpdateArmatureBoneLabelWeights():
-
     objAct = bpy.context.active_object
     if objAct is None or objAct.type != "ARMATURE":
         return
@@ -228,7 +225,6 @@ class CPgAtSkeleton(bpy.types.PropertyGroup):
 
 ###################################################################################
 class CPgAtBone(bpy.types.PropertyGroup):
-
     sId: bpy.props.StringProperty(name="Bone Id")
     sParent: bpy.props.StringProperty(name="Parent Bone Id")
     clChildren: bpy.props.CollectionProperty(type=CPgAtBoneId)
@@ -245,7 +241,6 @@ class CPgAtBone(bpy.types.PropertyGroup):
 
 ###################################################################################
 class CPgAtPose(bpy.types.PropertyGroup):
-
     sId: bpy.props.StringProperty(name="Pose Id")
 
     clBones: bpy.props.CollectionProperty(type=CPgAtBone)
@@ -257,7 +252,6 @@ class CPgAtPose(bpy.types.PropertyGroup):
 
 ###################################################################################
 class CPgAtObject(bpy.types.PropertyGroup):
-
     pObject: bpy.props.PointerProperty(type=bpy.types.Object, name="object")
 
 
@@ -265,8 +259,16 @@ class CPgAtObject(bpy.types.PropertyGroup):
 
 
 ###################################################################################
-class CPgAtVertex(bpy.types.PropertyGroup):
+class CPgAtInstRep(bpy.types.PropertyGroup):
+    pObject: bpy.props.PointerProperty(type=bpy.types.Object, name="object")
+    pCollection: bpy.props.PointerProperty(type=bpy.types.Collection, name="collection")
 
+
+# endclass
+
+
+###################################################################################
+class CPgAtVertex(bpy.types.PropertyGroup):
     vVertex: bpy.props.FloatVectorProperty(name="Vertex")
 
 
@@ -275,7 +277,6 @@ class CPgAtVertex(bpy.types.PropertyGroup):
 
 ###################################################################################
 class CPgAtVertexList(bpy.types.PropertyGroup):
-
     eType: bpy.props.EnumProperty(
         items=[
             ("NONE", "None", "Undefined vertex list type"),
@@ -293,7 +294,6 @@ class CPgAtVertexList(bpy.types.PropertyGroup):
 
 ###################################################################################
 class CPgAtVgData(bpy.types.PropertyGroup):
-
     sId: bpy.props.StringProperty(name="Vertex Group Id")
     sType: bpy.props.StringProperty(name="Vertex Group Type")
     vColor: bpy.props.FloatVectorProperty(name="Color")
@@ -305,7 +305,6 @@ class CPgAtVgData(bpy.types.PropertyGroup):
 
 ###################################################################################
 class CPgAtVgInstance(bpy.types.PropertyGroup):
-
     iIdx: bpy.props.IntProperty(name="Vertex Group Instance")
 
     clVertexGroups: bpy.props.CollectionProperty(type=CPgAtVgData)
@@ -316,7 +315,6 @@ class CPgAtVgInstance(bpy.types.PropertyGroup):
 
 ###################################################################################
 class CPgAtVgLabelType(bpy.types.PropertyGroup):
-
     sId: bpy.props.StringProperty(name="Vertex Group Label Type")
 
     clInstances: bpy.props.CollectionProperty(type=CPgAtVgInstance)
@@ -327,10 +325,11 @@ class CPgAtVgLabelType(bpy.types.PropertyGroup):
 
 ###################################################################################
 class CPgAtInstance(bpy.types.PropertyGroup):
-
     iIdx: bpy.props.IntProperty(name="Instance Idx")
     sOrientId: bpy.props.StringProperty(name="Orientation Id")
 
+    # Instance representation objects/collections
+    clInstRep: bpy.props.CollectionProperty(type=CPgAtInstRep)
     clObjects: bpy.props.CollectionProperty(type=CPgAtObject)
     xBox2d: bpy.props.PointerProperty(type=CPgAtBox2d)
     xBox3d: bpy.props.PointerProperty(type=CPgAtBox3d)
@@ -353,7 +352,6 @@ class CPgAtInstance(bpy.types.PropertyGroup):
 
 ###################################################################################
 class CPgAtLabelType(bpy.types.PropertyGroup):
-
     sId: bpy.props.StringProperty(name="Type ID", description="Label type id")
 
     colLabel: bpy.props.FloatVectorProperty(default=(0.8, 0.8, 0.8), subtype="COLOR", min=0.0, max=1.0)
@@ -379,7 +377,6 @@ class CPgAtLabelType(bpy.types.PropertyGroup):
 ###################################################################################
 # Register
 def register():
-
     bpy.utils.register_class(CPgAtBoneId)
     bpy.utils.register_class(CPgAtBone)
     bpy.utils.register_class(CPgAtSkelId)
@@ -388,6 +385,7 @@ def register():
     bpy.utils.register_class(CPgAtBox2d)
     bpy.utils.register_class(CPgAtBox3d)
     bpy.utils.register_class(CPgAtObject)
+    bpy.utils.register_class(CPgAtInstRep)
 
     bpy.utils.register_class(CPgAtVertex)
     bpy.utils.register_class(CPgAtVertexList)
@@ -405,7 +403,6 @@ def register():
 
 
 def unregister():
-
     bpy.utils.unregister_class(CPgAtLabelType)
     bpy.utils.unregister_class(CPgAtShaderTypes)
     bpy.utils.unregister_class(CPgAtInstance)
@@ -416,6 +413,7 @@ def unregister():
     bpy.utils.unregister_class(CPgAtVgInstance)
     bpy.utils.unregister_class(CPgAtVgLabelType)
 
+    bpy.utils.unregister_class(CPgAtInstRep)
     bpy.utils.unregister_class(CPgAtObject)
     bpy.utils.unregister_class(CPgAtBox3d)
     bpy.utils.unregister_class(CPgAtBox2d)

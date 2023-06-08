@@ -1485,6 +1485,23 @@ class CLabelSet:
                 xActInst.name = str(iLabelTypeInstIdx)
                 xActInst.iIdx = iLabelTypeInstIdx
                 xActInst.sOrientId = sInstOrientId if sInstOrientId is not None else ""
+
+                # if the whole collection is an instance, then store its' name
+                if iNextObjInc == 0:
+                    xActInstRep = xActInst.clInstRep.add()
+                    xActInstRep.name = _clAct.name
+                    xActInstRep.pObject = None
+                    xActInstRep.pCollection = _clAct
+
+                # endif
+            # endif
+
+            # Store top objects, if every object is an instance
+            if iNextObjInc > 0 and xLabInst.sTopObj not in xActInst.clInstRep:
+                xActInstRep = xActInst.clInstRep.add()
+                xActInstRep.name = xLabInst.sTopObj
+                xActInstRep.pObject = xLabInst.objTop
+                xActInstRep.pCollection = None
             # endif
 
             # Store pose of armature objects
@@ -2403,6 +2420,16 @@ class CLabelSet:
                 # endif
 
                 # ##########################################################################################
+                # lArmaList = [x.sId for x in xInst.clPoses]
+                # lObjList = dicInst["lObjects"] = [
+                #     x.pObject.name
+                #     for x in xInst.clObjects
+                #     if x.pObject.parent is None or x.pObject.parent.name not in lArmaList
+                # ]
+                # lObjList.extend(lArmaList)
+                dicInst["lNames"] = [x.name for x in xInst.clInstRep]
+
+                # ##########################################################################################
                 xBox2d = xInst.xBox2d
                 if xBox2d.bIsValid is True:
                     dicInst["mBox2d"] = {
@@ -2504,7 +2531,7 @@ class CLabelSet:
         anybase.config.Save(
             (xPath.parent.as_posix(), xPath.name),
             dicData,
-            sDTI="/anytruth/render/labeltypes/raw:1.0",
+            sDTI="/anytruth/render/labeltypes/raw:1.1",
         )
 
     # enddef
