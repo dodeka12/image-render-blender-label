@@ -90,7 +90,7 @@ class CLocalPos3d(CShaderNodeTree):
         )
 
         skOffset = anyblend.node.shader.vector.Add(self.xNodeTree, "Add Offset", skTransform, nodIn.outputs["Offset"])
-        skScale = anyblend.node.shader.vector.Scale(self.xNodeTree, "Scale", skOffset, 100.0)
+        skScale = anyblend.node.shader.vector.Scale(self.xNodeTree, "Scale", skOffset, 1.0)
         skLocPos = skScale
 
         if self._bSphericalCS is True:
