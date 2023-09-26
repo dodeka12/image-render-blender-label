@@ -29,6 +29,7 @@
 import bpy
 import os
 from typing import Optional
+from pathlib import Path
 
 import anybase
 import anybase.path
@@ -38,6 +39,7 @@ from .cls_prop_labelset import CLabelSet
 from .at_prop_clnlab import CPgAtCollectionLabel
 from .cls_anycam_config import CAnyCamConfig
 from .node.shader.types import ELabelShaderTypes
+
 
 ############################################################################################################
 def ImportLabelTypes(_xContext, _sPathTypes: str = None):
@@ -62,7 +64,6 @@ def ImportLabelTypes(_xContext, _sPathTypes: str = None):
 def SetCollectionLabel(
     _xContext, *, sCollectionName, sLabelTypeId=None, bHasLabel=True, bIgnore=False, sChildrenInstanceType=None
 ):
-
     xScn = _xContext.scene
     if not hasattr(xScn, "xAtLabelSet"):
         raise Exception("AnyTruth add-on not installed in current blender instance")
@@ -104,7 +105,6 @@ def SetCollectionLabel(
 
 ############################################################################################################
 def CopyCollectionLabel(*, _sClnNameTrg: str, _sClnNameSrc: str, _xContext: Optional[bpy.types.Context] = None):
-
     xCtx: bpy.types.Context
     if _xContext is None:
         xCtx = bpy.context
@@ -141,7 +141,6 @@ def CopyCollectionLabel(*, _sClnNameTrg: str, _sClnNameSrc: str, _xContext: Opti
 
 ############################################################################################################
 def ApplyAnnotation(_xContext, _bApply, _sAnnotationType, *, _bEvalBoxes2d: bool = False):
-
     xLabelSetProp = _xContext.scene.xAtLabelSet
     if xLabelSetProp is None:
         raise CAnyExcept("Label set does not exist in scene")
@@ -158,9 +157,9 @@ def ApplyAnnotation(_xContext, _bApply, _sAnnotationType, *, _bEvalBoxes2d: bool
 
 # enddef
 
+
 ############################################################################################################
 def UpdatePos3dOffset(_xContext):
-
     xLabelSetProp = _xContext.scene.xAtLabelSet
     if xLabelSetProp is None:
         raise CAnyExcept("Label set does not exist in scene")
@@ -184,7 +183,6 @@ def ApplyLabelRenderSettings(
     bApplyFilePathsOnly=True,
     bEvalBoxes2d: bool = False,
 ):
-
     from anyblend.compositor.cls_fileout import CFileOut
 
     if not CLabelSet.IsValidLabelType(sAnnotationType):
@@ -504,9 +502,14 @@ def ApplyLabelRenderSettings(
 
 ############################################################################################################
 def ExportAppliedLabelTypes(
-    _xContext, _sFpExport, *, bOverwrite=False, bUpdateLabelData3d: bool = True, bEvalBoxes2d: bool = False
+    _xContext,
+    _sFpExport,
+    *,
+    bOverwrite=False,
+    bUpdateLabelData3d: bool = True,
+    bEvalBoxes2d: bool = False,
+    _pathExData: Path = None,
 ):
-
     # ## DEBUG
     # print("ExportAppliedLabelTypes", flush=True)
     # ##########
@@ -522,14 +525,14 @@ def ExportAppliedLabelTypes(
     # endif
     xLabelSet.sFilePathExport = _sFpExport
     xLabelSet.bOverwriteExportApplied = bOverwrite
-    xLabelSet.ExportAppliedTypes()
+    xLabelSet.ExportAppliedTypes(_pathExData=_pathExData)
 
 
 # enddef
 
+
 ############################################################################################################
 def GetOffsetPos3d(_xContext: Optional[bpy.types.Context] = None) -> list:
-
     xCtx: bpy.types.Context = None
 
     if _xContext is None:
@@ -549,9 +552,9 @@ def GetOffsetPos3d(_xContext: Optional[bpy.types.Context] = None) -> list:
 
 # enddef
 
+
 ############################################################################################################
 def ExportPos3dInfo(_xContext, _sFpExport, bOverwrite=False):
-
     xLabelSetProp = _xContext.scene.xAtLabelSet
     if xLabelSetProp is None:
         raise CAnyExcept("Label set does not exist in scene")
@@ -568,7 +571,6 @@ def ExportPos3dInfo(_xContext, _sFpExport, bOverwrite=False):
 
 ############################################################################################################
 def EnableAutoUpdateAnnotation(_xContext, _bEnable=True):
-
     xLabelSetProp = _xContext.scene.xAtLabelSet
     if xLabelSetProp is None:
         raise CAnyExcept("Label set does not exist in scene")

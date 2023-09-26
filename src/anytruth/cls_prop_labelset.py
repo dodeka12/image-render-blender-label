@@ -2386,7 +2386,7 @@ class CLabelSet:
     # enddef
 
     ##########################################################################
-    def ExportAppliedTypes(self):
+    def ExportAppliedTypes(self, *, _pathExData: Path = None):
         xPath = Path(self.GetExportFilePath())
         if not xPath.parent.exists():
             raise Exception("Export path does not exist: {0}".format(xPath.parent.as_posix()))
@@ -2416,7 +2416,15 @@ class CLabelSet:
                     dicCamData["lAxes"] = [list(x) for x in matCamera.to_euler().to_matrix().transposed()]
                     dicCamData["lOrigin"] = [x * fMeterPerBU for x in matCamera.translation]
                     if bIsLut is True:
-                        StoreLutCameraData(_dicCamData=dicCamData, _xPath=xPath.parent, _bOverwrite=False)
+                        if _pathExData is not None:
+                            pathLut = _pathExData / "lut"
+                            pathLut.mkdir(exist_ok=True, parents=True)
+                        else:
+                            pathLut = xPath.parent
+                        # endif
+                        StoreLutCameraData(
+                            _dicCamData=dicCamData, _xPath=pathLut, _xFromPath=xPath.parent, _bOverwrite=False
+                        )
 
                     # endif
                 # endif
