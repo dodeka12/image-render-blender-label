@@ -552,7 +552,8 @@ class CLabelSet:
         self.ApplyMaterial(
             matObject=matLocalPos,
             sBgName="AT.LocalPos3d",
-            tBgColor=(1e9, 1e9, 1e9, 1),
+            tBgColor=(0, 0, 0, 1),
+            # tBgColor=(1e9, 1e9, 1e9, 1),
             fBgStrength=1.0,
             funcPerObject=_SetOffset if bSphericalCS is False else None,
         )
@@ -568,7 +569,7 @@ class CLabelSet:
         matLocalPos = xMatLocalPos.xMaterial
 
         # Apply Material
-        self.ApplyMaterial(matObject=matLocalPos, sBgName="AT.ObjectIdx", tBgColor=(1e9, 1e9, 1e9, 1), fBgStrength=1.0)
+        self.ApplyMaterial(matObject=matLocalPos, sBgName="AT.ObjectIdx", tBgColor=(0.0, 0.0, 0.0, 1), fBgStrength=1.0)
 
     # enddef
 
