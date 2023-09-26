@@ -748,6 +748,27 @@ class CLabelSet:
     # enddef
 
     ###################################################################################
+    def _EnsureLabelShaderType(self, _matX: bpy.types.Material):
+        xEmission = anyblend.node.shader.utils.CNodeDescriptor("EMISSION", "ShaderNodeEmission", "Color", 0)
+        xDiffuse = anyblend.node.shader.utils.CNodeDescriptor("BSDF_DIFFUSE", "ShaderNodeBsdfDiffuse", "Color", 0)
+
+        if self.xAnyCamConfig.eLabelShaderType == ELabelShaderTypes.DIFFUSE:
+            xSearch = xEmission
+            xReplace = xDiffuse
+
+        elif self.xAnyCamConfig.eLabelShaderType == ELabelShaderTypes.EMISSION:
+            xSearch = xDiffuse
+            xReplace = xEmission
+
+        else:
+            raise RuntimeError(f"Unsupported label shader type '{self.xAnyCamConfig.eLabelShaderType}'")
+        # endif
+
+        anyblend.node.shader.utils.ReplaceNodeType(_matX.node_tree, _xSearch=xSearch, _xReplace=xReplace)
+
+    # enddef
+
+    ###################################################################################
     def _PrepareUserMaterials(self):
         lTypeIds = [x.sId for x in self.clAppliedTypes]
 
@@ -793,6 +814,8 @@ class CLabelSet:
                 iShaderTypeIdx = lOverallShaderTypes.index(sShaderType)
                 nodX.outputs[0].default_value = iShaderTypeIdx
             # endfor
+
+            self._EnsureLabelShaderType(matX)
         # endfor
 
     # enddef
@@ -2690,7 +2713,7 @@ class CLabelSet:
     ############################################################################################################
     def LoadLabelDb(self, _sFpLabelDb):
         if not os.path.exists(_sFpLabelDb):
-            raise CAnyExcept("Label types file does not exist: {0}".format(_sFpLabelDb))
+            raise CAnyError_Message(sMsg="Label types file does not exist: {0}".format(_sFpLabelDb))
         # endif
 
         pathCfg = anybase.path.MakeNormPath(_sFpLabelDb)
@@ -2701,7 +2724,7 @@ class CLabelSet:
 
         dicTypes = dicCfg.get("mTypes")
         if dicTypes is None:
-            raise CAnyExcept("Label types config file does not contain 'mTypes' element")
+            raise CAnyError_Message(sMsg="Label types config file does not contain 'mTypes' element")
         # endif
 
         lTypes = [{"sId": "None", "lColor": [0, 0, 0]}]
