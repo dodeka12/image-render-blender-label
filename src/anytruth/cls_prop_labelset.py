@@ -1325,10 +1325,15 @@ class CLabelSet:
         # # endif
         ###
 
+        # 2023-11-28: Exclude this test, to ensure that also materials of objects
+        # in disabled collections are adapted, because these can be the input
+        # to a geometry node tree modifier that uses the collection's objects
+        # as instances.
+
         # Do not process collections excluded from the current view layer context
-        if anyblend.collection.IsExcluded(bpy.context, _clAct.name):
-            return None
-        # endif
+        # if anyblend.collection.IsExcluded(bpy.context, _clAct.name):
+        #     return None
+        # # endif
 
         xLabel = None
         bIgnore = False
