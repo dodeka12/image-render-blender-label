@@ -1256,6 +1256,10 @@ class CLabelSet:
                 continue
             # endif
 
+            if sTopObj not in bpy.context.view_layer.objects:
+                continue
+            # endif
+
             objTop = bpy.data.objects[sTopObj]
 
             if objTop.AnyTruth.xSettings.bIgnore is True:
