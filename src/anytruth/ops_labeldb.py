@@ -140,7 +140,7 @@ def CopyCollectionLabel(*, _sClnNameTrg: str, _sClnNameSrc: str, _xContext: Opti
 
 
 ############################################################################################################
-def ApplyAnnotation(_xContext, _bApply, _sAnnotationType, *, _bEvalBoxes2d: bool = False):
+def ApplyAnnotation(_xContext, _bApply, _sAnnotationType, *, _bEvalBoxes2d: bool = False, _bAllowFovBoxes2d: bool = False):
     xLabelSetProp = _xContext.scene.xAtLabelSet
     if xLabelSetProp is None:
         raise CAnyExcept("Label set does not exist in scene")
@@ -152,7 +152,7 @@ def ApplyAnnotation(_xContext, _bApply, _sAnnotationType, *, _bEvalBoxes2d: bool
 
     xLabelSet = CLabelSet(xLabelSetProp)
     xLabelSet.eAnnotationType = _sAnnotationType
-    xLabelSet.ApplyAnnotation(_bApply, _bEvalBoxes2d=_bEvalBoxes2d)
+    xLabelSet.ApplyAnnotation(_bApply, _bEvalBoxes2d=_bEvalBoxes2d, _bAllowFovBoxes2d=_bAllowFovBoxes2d)
 
 
 # enddef
@@ -182,6 +182,7 @@ def ApplyLabelRenderSettings(
     sFilename=None,
     bApplyFilePathsOnly=True,
     bEvalBoxes2d: bool = False,
+    bAllowFovBoxes2d: bool = False,
 ):
     from anyblend.compositor.cls_fileout import CFileOut
 
@@ -483,7 +484,13 @@ def ApplyLabelRenderSettings(
 
     if bApplyFilePathsOnly is False:
         # Apply the label materials
-        ApplyAnnotation(_xContext, True, sAnnotationType, _bEvalBoxes2d=bEvalBoxes2d)
+        ApplyAnnotation(
+            _xContext, 
+            True, 
+            sAnnotationType, 
+            _bEvalBoxes2d=bEvalBoxes2d, 
+            _bAllowFovBoxes2d=bAllowFovBoxes2d,
+        )
 
         for sPathExport in lPathExport:
             if not os.path.exists(sPathExport):
@@ -508,7 +515,8 @@ def ExportAppliedLabelTypes(
     bOverwrite=False,
     bUpdateLabelData3d: bool = True,
     bEvalBoxes2d: bool = False,
-    _pathExData: Path = None,
+    _pathExData: Path | None = None,
+    bAllowFovBoxes2d: bool = False,
 ):
     # ## DEBUG
     # print("ExportAppliedLabelTypes", flush=True)
@@ -521,7 +529,7 @@ def ExportAppliedLabelTypes(
 
     xLabelSet = CLabelSet(xLabelSetProp)
     if bUpdateLabelData3d is True:
-        xLabelSet.UpdateLabelData3d(bDrawData=False, bEvalBoxes2d=bEvalBoxes2d)
+        xLabelSet.UpdateLabelData3d(bDrawData=False, bEvalBoxes2d=bEvalBoxes2d, bAllowFovBoxes2d=bAllowFovBoxes2d)
     # endif
     xLabelSet.sFilePathExport = _sFpExport
     xLabelSet.bOverwriteExportApplied = bOverwrite

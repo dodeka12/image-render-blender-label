@@ -377,7 +377,7 @@ class CLabelSet:
     # enddef
 
     ##########################################################################
-    def ApplyAnnotation(self, _bApply, *, _bEvalBoxes2d: bool = False):
+    def ApplyAnnotation(self, _bApply, *, _bEvalBoxes2d: bool = False, _bAllowFovBoxes2d: bool = False):
         if _bApply == self.loc_bApplyAnnotation:
             return
         # endif
@@ -403,13 +403,13 @@ class CLabelSet:
 
         self.loc_bApplyAnnotation = _bApply
         if _bApply is True and self.eAnnotationType == "LABEL":
-            self.UpdateLabelData3d(bEvalBoxes2d=_bEvalBoxes2d)
+            self.UpdateLabelData3d(bEvalBoxes2d=_bEvalBoxes2d, bAllowFovBoxes2d=_bAllowFovBoxes2d)
         # endif
 
     # enddef
 
     ##########################################################################
-    def UpdateLabelData3d(self, *, bDrawData=True, bEvalBoxes2d=False):
+    def UpdateLabelData3d(self, *, bDrawData=True, bEvalBoxes2d=False, bAllowFovBoxes2d=False):
         if not self.loc_bApplyAnnotation:
             return
         # endif
@@ -425,7 +425,7 @@ class CLabelSet:
 
         if bEvalBoxes2d is True:
             self.Print("UpdateLabelData3d->EvalBoxes2d() start")
-            self.EvalBoxes2d()
+            self.EvalBoxes2d(bAllowFovBoxes2d=bAllowFovBoxes2d)
         # endif
 
         self.Print("UpdateLabelData3d->EvalBoxes3d() start")
@@ -1930,7 +1930,7 @@ class CLabelSet:
     # enddef
 
     ###################################################################################
-    def EvalBoxes2d(self):
+    def EvalBoxes2d(self, bAllowFovBoxes2d: bool = False):
         # xDepsGraph = bpy.context.evaluated_depsgraph_get()
 
         viewCam = anycam.ops.GetAnyCamView(bpy.context, bpy.context.scene.camera.name, _bAddExtrinsics=True)
@@ -1979,7 +1979,11 @@ class CLabelSet:
                 # endif
 
                 lImgPnts, lInFront, lInImage = viewCam.ProjectToImage(aAllVex, _bDetailedFlags=True)
-                if all(lInFront) is True:
+                if bAllowFovBoxes2d:
+                    lImgPnts = [x for i, x in enumerate(lImgPnts) if lInImage[i] and lInFront[i]]
+                # endif
+
+                if all(lInFront) is True or bAllowFovBoxes2d:
                     aImgPnts = np.array(lImgPnts)
                     aMin = np.min(aImgPnts, axis=0)
                     aMax = np.max(aImgPnts, axis=0)
