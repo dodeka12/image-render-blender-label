@@ -1983,7 +1983,7 @@ class CLabelSet:
                     lImgPnts = [x for i, x in enumerate(lImgPnts) if lInImage[i] and lInFront[i]]
                 # endif
 
-                if all(lInFront) is True or bAllowFovBoxes2d:
+                if len(lImgPnts) > 0 and (all(lInFront) is True or bAllowFovBoxes2d):
                     aImgPnts = np.array(lImgPnts)
                     aMin = np.min(aImgPnts, axis=0)
                     aMax = np.max(aImgPnts, axis=0)
